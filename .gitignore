@@ -1,3 +1,10 @@
+# Firebase
+.firebaserc
+.gitignore
+firestore.rules
+firestore.indexes.json
+firebase.json
+
 # Logs
 logs
 *.log
