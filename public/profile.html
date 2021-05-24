@@ -8,28 +8,39 @@
   <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
 
   <link rel="stylesheet" href="styles/main.css">
-  <title>Recipe Share</title>
+  <title>Messenger</title>
 </head>
 
 <body>
   <nav class="navbar navbar-dark fixed-top">    
-    <a class="navbar-brand" href="#">Tyler's Messenger</a>
+    <a id="titleText" class="navbar-brand" href="#">Tyler's Messenger</a>
     <div id="logOutButton" class="navbar-brand justify-content-end">Log Out</div>
   </nav>
   <div id="profilePage" class="container page-container align-content-center">
-    <div class="row">
-      <div class="col-10">
-        <div class="form-outline justify-content-center">
-          <label for="searchEmail" class="form-label">Search For an Email to View and Send messages</label>
-          <input type="text" class="form-control form" id="searchEmail"></input>
-        </div>
+    <div class="row py-3">
+      <div class="col-2 order-2" id="sticky-sidebar">
+          <div class="sticky-top">
+              <div id="recentContainer" class="row justify-content-end">
+
+              </div>
+          </div>
       </div>
-      <button id="searchButton" class="col-1 btn">Search</button>
-    </div>
-    <div class="row justify-content-center" id="messageContainer">
-      
-    </div>
-    <nav class="navbar navbar-dark fixed-bottom">    
+      <div class="col" id="main">
+        <h1><div class="row">
+            <div class="col-11">
+              <div class="form-outline justify-content-center">
+                <label for="searchEmail" class="form-label">Search For an Email to View and Send messages</label>
+                <input type="text" class="form-control form" id="searchEmail"></input>
+              </div>
+            </div>
+            <button id="searchButton" class="col-1 btn">Search</button>
+          </div>
+          <div class="row justify-content-center" id="messageContainer">
+          </div> 
+      </div>
+  </div>
+    
+    <nav id="sendBar" class="navbar navbar-dark fixed-bottom">    
       <a class="navbar-brand" href="#">Send a Message</a>
       <div class="col-10">
         <div class="form-outline justify-content-center">

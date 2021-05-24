@@ -9,6 +9,8 @@ body {
 
 .page-container {
     margin-top: 75px;
+    
+
 }
 
 #mainPage {
@@ -25,4 +27,15 @@ body {
 #message {
     background: white;
     color: black;
+}
+
+.recent-card {
+    background: #2020ff;
+    z-index: -1;
+    position: relative;
+}
+
+#sendBar {
+    z-index: 1;
+    position: fixed;
 }

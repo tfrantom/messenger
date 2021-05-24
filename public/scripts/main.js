@@ -72,6 +72,24 @@ rhit.ProfileManager = class {
 			console.log('Error: ', error);
 		});
 	}
+
+	mostRecent(updateView) {
+		this._ref.where('recipient', '==', rhit.authManager.email)
+			.orderBy('timeSent', 'desc')
+			.limit(5)
+			.get()
+			.then((querySnapshot) => {
+				let messages = [];
+				querySnapshot.forEach((doc) => {
+					messages.push(new rhit.Message(
+						doc.data().sender,
+						doc.data().recipient,
+						doc.data().message,
+						doc.data().timeSent))
+				});
+				updateView(messages);
+			})
+	}
 	
 	getMessages(recipient, updateView){
 		this._recipient = recipient;
@@ -116,6 +134,7 @@ function htmlToElement(html) {
 	var template = document.createElement("template");
 	html = html.trim();
 	template.innerHTML = html;
+	console.log(html);
 	return template.content.firstChild;
 }
 
@@ -126,12 +145,17 @@ rhit.ProfilePageController = class {
 			const message = document.querySelector('#message');
 			const email = document.querySelector('#searchEmail');
 			rhit.profileManager.send(message.value);
-			rhit.profileManager.getMessages(email.value, this.updateList);
+			rhit.profileManager.getMessages(rhit.profileManager.recipient, this.updateList);
 		}
 		document.querySelector('#searchButton').onclick = (event) => {
 			const email = document.querySelector('#searchEmail');
 			rhit.profileManager.getMessages(email.value, this.updateList);
 		}
+		rhit.profileManager.mostRecent(this.updateRecents);
+		rhit.recentsIntervalId = setInterval(() => {
+			rhit.profileManager.mostRecent(this.updateRecents);
+		}, 10000);
+
 		rhit.intervalId = setInterval(() => {
 			console.log('Refreshing, ', rhit.profileManager.recipient);
 			if(rhit.profileManager.recipient) {
@@ -139,6 +163,21 @@ rhit.ProfilePageController = class {
 				rhit.profileManager.getMessages(rhit.profileManager.recipient, this.updateList);
 			}
 		}, 2000);
+	}
+
+	updateRecents(messages) {
+		const newList = htmlToElement('<div id="recentContainer"></div>');
+		messages.forEach(message => {
+			const card = createRecentsCard(message);
+			card.onclick = (event) => {
+				rhit.profileManager.getMessages(message.sender, rhit.ProfilePageController.updateList);
+			}
+			newList.appendChild(card);
+		});
+		const oldList = document.querySelector('#recentContainer');
+		oldList.removeAttribute('id');
+		oldList.hidden = true;
+		oldList.parentElement.appendChild(newList);
 	}
 
 	updateList(messages) {
@@ -151,19 +190,28 @@ rhit.ProfilePageController = class {
 		oldList.removeAttribute('id');
 		oldList.hidden = true;
 		oldList.parentElement.appendChild(newList);
+		document.querySelector('#titleText').innerHTML = `Tyler's Messenger: ${rhit.profileManager.recipient}`
 	}
 	
 }
 
+function createRecentsCard(message) {
+	return htmlToElement(`<div class="card text-white bg-primary mt-1">
+	<div class="card-body">
+	<div class="card-header text-bold">${message.sender}</div>
+	<div class="card-text">${message.message}</div>
+	</div></div>`);
+}
+
 function createCard(message) {
 	if(message.sender == rhit.authManager.email) {
-		return htmlToElement(`<div class="card justify-content-end">
+		return htmlToElement(`<div class="card mt-1 justify-content-end">
 		<div class="card-body">
 		<h4 class="card-title">${message.message}</h4>
 		<div class="text-muted">You sent at ${message.timeSent.toDate().toDateString()}</div>
 		</div></div>`);
 	} else {
-		return htmlToElement(`<div class="card">
+		return htmlToElement(`<div class="card mt-1 justify-content-end">
 		<div class="card-body">
 		<h4 class="card-title">${message.message}</h4>
 		<div class="text-muted">${message.sender} sent at ${message.timeSent.toDate().toDateString()}</div>
