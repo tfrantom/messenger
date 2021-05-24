@@ -1,0 +1,28 @@
+body {
+    background: #DDDDDD;
+}
+
+.navbar {
+    background-color: #1010ff;
+    color: white;
+}
+
+.page-container {
+    margin-top: 75px;
+}
+
+#mainPage {
+    margin-top: 100px;
+}
+
+.btn {
+    background-color: #1010ff;
+    color: white;
+    margin-right: 10px;
+    
+}
+
+#message {
+    background: white;
+    color: black;
+}
